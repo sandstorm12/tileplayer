@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import gi
 import sys
 import math
@@ -202,6 +204,6 @@ if __name__ == "__main__":
         uris, args
     )
 
-    print(pipeline_string)
+    print("Pipeline: {}".format(pipeline_string))
 
     _run_pipeline(pipeline_string, uris)

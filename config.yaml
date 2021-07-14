@@ -1,41 +1,42 @@
 streams:
   -
-    text: "حیاط - دوربین ۱"
-    uri: "rtsp://admin:123456@192.168.2.136:554/stream0"
+    text: "FPS=5"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 5
+    text_size: 30
+  -
+    text: "FPS=10"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 10
+    text_size: 30
+  -
+    text: "FPS=15"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 15
+    text_size: 30
+  -
+    text: "FPS=25"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
     fps: 25
     text_size: 30
   -
-    text: "حیاط - دوربین ۲"
-    uri: "rtsp://admin:Sensifai@192.168.2.135:554/"
-    fps: 25
+    text: "FPS=5"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 5
     text_size: 30
   -
-    text: "بالکن"
-    uri: "rtsp://admin:Sensifai@192.168.2.252:554/"
-    fps: 25
+    text: "FPS=10"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 10
     text_size: 30
   -
-    text: "راهرو طبقه بالا"
-    uri: "rtsp://admin:Sensifai@192.168.2.204:554/Streaming/Channels/101/"
-    fps: 25
+    text: "FPS=15"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 15
     text_size: 30
   -
-    text: "حیاط - دوربین ۱"
-    uri: "rtsp://admin:123456@192.168.2.136:554/stream0"
+    text: "FPS=25"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
     fps: 25
     text_size: 30
-  -
-    text: "حیاط - دوربین ۲"
-    uri: "rtsp://admin:Sensifai@192.168.2.135:554/"
-    fps: 25
-    text_size: 30
-  -
-    text: "بالکن"
-    uri: "rtsp://admin:Sensifai@192.168.2.252:554/"
-    fps: 25
-    text_size: 30
-  -
-    text: "راهرو طبقه بالا"
-    uri: "rtsp://admin:Sensifai@192.168.2.204:554/Streaming/Channels/101/"
-    fps: 25
-    text_size: 30
+

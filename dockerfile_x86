@@ -1,0 +1,40 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get -y --no-install-recommends install \
+    nano vim \
+    build-essential \
+    pkg-config \
+    python3.6 \
+    python3-pip \
+    python3.6-dev \
+    python3.6-venv \
+    python3-setuptools \
+    python-dev \
+    python3-dev
+
+RUN apt-get -y --no-install-recommends install \
+    git \
+    gstreamer-1.0 \
+    gstreamer1.0-dev \
+    libgstreamer1.0-0 \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    gstreamer1.0-doc \
+    gstreamer1.0-tools \
+    gstreamer1.0-x \
+    gstreamer1.0-gl \
+    gstreamer1.0-gtk3 \
+    python-gst-1.0 \
+    libgirepository1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    python3-gi \
+    python-gi-dev
+
+WORKDIR ./src
+
+COPY . ./
+
+RUN python3 -m pip install .
