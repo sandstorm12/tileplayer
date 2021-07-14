@@ -1,0 +1,41 @@
+streams:
+  -
+    text: "حیاط - دوربین ۱"
+    uri: "rtsp://admin:123456@192.168.2.136:554/stream0"
+    fps: 25
+    text_size: 30
+  -
+    text: "حیاط - دوربین ۲"
+    uri: "rtsp://admin:Sensifai@192.168.2.135:554/"
+    fps: 25
+    text_size: 30
+  -
+    text: "بالکن"
+    uri: "rtsp://admin:Sensifai@192.168.2.252:554/"
+    fps: 25
+    text_size: 30
+  -
+    text: "راهرو طبقه بالا"
+    uri: "rtsp://admin:Sensifai@192.168.2.204:554/Streaming/Channels/101/"
+    fps: 25
+    text_size: 30
+  -
+    text: "حیاط - دوربین ۱"
+    uri: "rtsp://admin:123456@192.168.2.136:554/stream0"
+    fps: 25
+    text_size: 30
+  -
+    text: "حیاط - دوربین ۲"
+    uri: "rtsp://admin:Sensifai@192.168.2.135:554/"
+    fps: 25
+    text_size: 30
+  -
+    text: "بالکن"
+    uri: "rtsp://admin:Sensifai@192.168.2.252:554/"
+    fps: 25
+    text_size: 30
+  -
+    text: "راهرو طبقه بالا"
+    uri: "rtsp://admin:Sensifai@192.168.2.204:554/Streaming/Channels/101/"
+    fps: 25
+    text_size: 30
