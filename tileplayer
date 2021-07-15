@@ -95,10 +95,20 @@ class TilePlayer(object):
             default=30
         )
 
+    def _add_debug_arguments(self, parser):
+        parser.add_argument(
+            '-v', '--verbose',
+            help=(
+                'Print some useful information.'
+            ),
+            action='store_true'
+        )
+
     def _add_optional_arguments(self, parser):
         self._add_format_arguments(parser)
         self._add_stream_arguments(parser)
         self._add_overlay_arguments(parser)
+        self._add_debug_arguments(parser)
 
     def _get_arguments(self):
         parser = argparse.ArgumentParser()
@@ -227,27 +237,21 @@ class TilePlayer(object):
         pipeline.set_state(Gst.State.PLAYING)
         mainloop.run()
 
-    def _copy_sample_config(self, args):
-        sample_config_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            'config.yaml'            
-        )
-        print(sample_config_path, args.generate)
-        copyfile(sample_config_path, args.generate)
-
     def _run_pipeline(self, args):
         uris = self._get_input_uris(args)
         if uris is None:
             raise Exception('Unable to obtain input list.')
         else:
-            for uri in uris:
-                print("Playing: {}".format(uri))
+            if args.verbose:
+                for uri in uris:
+                    print("Playing: {}".format(uri))
 
         pipeline_string = self._generate_pipeline(
             uris, args
         )
 
-        print("Pipeline: {}".format(pipeline_string))
+        if args.verbose:
+            print("Pipeline: {}".format(pipeline_string))
 
         self._run_pipeline(pipeline_string, uris, args)
 
