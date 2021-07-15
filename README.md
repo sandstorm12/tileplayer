@@ -3,6 +3,53 @@ A simpler multi-video file and stream player based on GStreamer
 
 ![](images/sample_image.png)
 
+
+## Notice
+This is a personal project under development. Bug reports and feature requests are appriciated.
+
+## Installation
+
+```bash
+python3 -m pip install git+https://github.com/sandstorm12/tileplayer
+```
+
+## Usage
+
+Using config file
+```bash
+# Generate sample config file
+tileplayer -g config.yaml
+tileplayer -i config.yaml
+```
+
+Directly passing streams:
+```bash
+tileplayer -i [file or stream uri ...]
+tileplayer -i file:///path/to/video/file file:///path/to/video/file ...
+tileplayer -i rtsp:///stream_address rtsp:///stream_address ...
+```
+
+Check sample config file or help to check available options:
+```bash
+tileplayer -g /tmp/config.yaml | less
+tileplayer -h
+```
+
+
+## Sample config
+```yaml
+  -
+    text: "FPS=5"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 5
+    text_size: 30
+  -
+    text: "FPS=10"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 10
+    text_size: 30
+```
+
 ## Run using docker image (tested on ubuntu)
 
 Build the docker image
