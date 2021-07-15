@@ -19,6 +19,7 @@ Using config file
 ```bash
 # Generate sample config file
 tileplayer -g config.yaml
+# Run tileplayer using the sample configs
 tileplayer -i config.yaml
 ```
 
@@ -26,10 +27,10 @@ Directly passing streams:
 ```bash
 tileplayer -i [file or stream uri ...]
 tileplayer -i file:///path/to/video/file file:///path/to/video/file ...
-tileplayer -i rtsp:///stream_address rtsp:///stream_address ...
+tileplayer -i rtsp://stream_address rtsp://stream_address ...
 ```
 
-Check sample config file or help to check available options:
+Refer to sample config file or help to check available options:
 ```bash
 tileplayer -g /tmp/config.yaml | less
 tileplayer -h
@@ -71,7 +72,7 @@ Run tileplayer sample
 ```bash
 # Generate sample config file
 tileplayer -g config.yaml
-
+# Run tileplayer using the sample configs
 tileplayer -c config.yaml
 ```
 
