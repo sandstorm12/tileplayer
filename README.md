@@ -39,10 +39,15 @@ tileplayer -h
 
 ## Sample config
 ```yaml
+streams:
   -
+    # Optional
     text: "FPS=5"
+    # Mandatory
     uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    # Optional
     fps: 5
+    # Optional
     text_size: 30
   -
     text: "FPS=10"
