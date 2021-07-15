@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import gi
+import os
 import sys
 import math
 import yaml
@@ -8,154 +9,179 @@ import argparse
 
 gi.require_version('Gst', '1.0')
 
+from tile_player import copy_sample_config
 from gi.repository import GObject, Gst, GLib
 
 
-def _get_arguments():
-    parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
-        '-c', '--config',
-        help=(
-            'A yaml config file containing stream or file URIs'
-            ' and playback information'
-        ),
-        type=str,
-        default=None
-    )
-    group.add_argument(
-        '-i', '--inputs',
-        type=str,
-        nargs='+',
-        help='List of input stream or file URIs',
-        default=None
-    )
-    parser.add_argument(
-        '-f', '--fps',
-        help='Playback fps',
-        type=int,
-        default=25
-    )
-    parser.add_argument(
-        '-p', '--protocol',
-        help=(
-            'Protocol for camera connection if inputs'
-            ' are streams. Cound be "auto", "tcp", or'
-            ' "udp". Default is "tcp"'
-        ),
-        type=str,
-        default="tcp"
-    )
-    parser.add_argument(
-        '-w', '--width',
-        help=(
-            'Tile width. Default: 640'
-        ),
-        type=int,
-        default=640
-    )
-    parser.add_argument(
-        '-a', '--height',
-        help=(
-            'Tile height. Default: 360'
-        ),
-        type=int,
-        default=360
-    )
-    parser.add_argument(
-        '-t', '--text_size',
-        help=(
-            'Overlay text size. Default: 30'
-        ),
-        type=int,
-        default=30
-    )
-    parser.add_argument(
-        '-l', '--low_latency',
-        help=(
-            'Apply latency limit on decoder. Default: False'
-        ),
-        type=bool,
-        default=False
-    )
-
-    args = parser.parse_args()
-
-    return args
-
-
-def _get_input_uris(args):
-    uris = None
-    if uris is None and args.config is not None:
-        uris = _load_uris_from_config(args.config)
-
-    if uris is None and args.inputs is not None:
-        uris = []
-        for uri in args.inputs:
-            uris.append({"uri": uri})
-
-    return uris
-
-
-def _load_uris_from_config(config_path):
-    with open(config_path, 'r') as yaml_file:
-        config = yaml.safe_load(yaml_file)
-
-    if not config.__contains__("streams"):
-        raise Exception("Key \"streams\" not found in config file")
-
-    return config["streams"]
-
-
-def __decodebin_child_added(child_proxy, Object, name, inputs):
-    if (name.find("decodebin") != -1):
-        Object.connect(
-            "child-added", __decodebin_child_added,
-            inputs
+class TilePlayer(object):
+    def _add_mandatory_arguments(self, parser):
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument(
+            '-c', '--config',
+            help=(
+                'A yaml config file containing stream or file URIs'
+                ' and playback information'
+            ),
+            type=str,
+            default=None
         )
-    elif name.find("source") != -1:
-        if args.low_latency:
-            Object.set_property(
-                "drop-on-latency",
-                1
+        group.add_argument(
+            '-i', '--inputs',
+            type=str,
+            nargs='+',
+            help='List of input stream or file URIs',
+            default=None
+        )
+        group.add_argument(
+            '-g', '--generate',
+            help=(
+                'Generate sample config file on the provided path.'
+            ),
+            type=str,
+            default=None
+        )
+
+    def _add_format_arguments(self, parser):
+        parser.add_argument(
+            '-f', '--fps',
+            help='Playback fps',
+            type=int,
+            default=25
+        )
+        parser.add_argument(
+            '-w', '--width',
+            help=(
+                'Tile width. Default: 640'
+            ),
+            type=int,
+            default=640
+        )
+        parser.add_argument(
+            '-a', '--height',
+            help=(
+                'Tile height. Default: 360'
+            ),
+            type=int,
+            default=360
+        )
+
+    def _add_stream_arguments(self, parser):
+        parser.add_argument(
+            '-p', '--protocol',
+            help=(
+                'Protocol for camera connection if inputs'
+                ' are streams. Cound be "auto", "tcp", or'
+                ' "udp". Default is "auto"'
+            ),
+            type=str,
+            default="auto"
+        )
+        parser.add_argument(
+            '-l', '--low_latency',
+            help=(
+                'Apply latency limit on decoder. Default: False'
+            ),
+            type=bool,
+            default=False
+        )
+
+    def _add_overlay_arguments(self, parser):
+        parser.add_argument(
+            '-t', '--text_size',
+            help=(
+                'Overlay text size. Default: 30'
+            ),
+            type=int,
+            default=30
+        )
+
+    def _add_optional_arguments(self, parser):
+        self._add_format_arguments(parser)
+        self._add_stream_arguments(parser)
+        self._add_overlay_arguments(parser)
+
+    def _get_arguments(self):
+        parser = argparse.ArgumentParser()
+        
+        self._add_mandatory_arguments(parser)
+        self._add_optional_arguments(parser)
+
+        args = parser.parse_args()
+
+        return args
+
+    def _get_input_uris(self, args):
+        uris = None
+        if uris is None and args.config is not None:
+            uris = self._load_uris_from_config(args.config)
+
+        if uris is None and args.inputs is not None:
+            uris = []
+            for uri in args.inputs:
+                uris.append({"uri": uri})
+
+        return uris
+
+    def _load_uris_from_config(self, config_path):
+        with open(config_path, 'r') as yaml_file:
+            config = yaml.safe_load(yaml_file)
+
+        if not config.__contains__("streams"):
+            raise Exception("Key \"streams\" not found in config file")
+
+        return config["streams"]
+
+    def __decodebin_child_added(self, child_proxy, Object, name, args):
+        if (name.find("decodebin") != -1):
+            Object.connect(
+                "child-added", self.__decodebin_child_added,
+                args
             )
-            Object.set_property(
-                "latency",
-                1000
+        elif name.find("source") != -1:
+            if args.low_latency:
+                Object.set_property(
+                    "drop-on-latency",
+                    1
+                )
+                Object.set_property(
+                    "latency",
+                    1000
+                )
+            if args.protocol != "auto":
+                Object.set_property(
+                    "protocols",
+                    args.protocol
+                )
+
+    def _fix_callbacks(self, pipeline, inputs, args):
+        for i, source in enumerate(inputs):
+            source_name = 'source_bin_{:02d}'.format(i)
+            uridecodebin_element = pipeline.get_child_by_name(
+                source_name
             )
-        if args.protocol != "auto":
-            Object.set_property(
-                "protocols",
-                args.protocol
+            uridecodebin_element.connect(
+                'child-added', self.__decodebin_child_added, args
             )
 
+    def _generate_mixer_branch(self):
+        mixer_branch = (
+            'compositor name=mix' +
+            ' ! videoconvert' +
+            ' ! autovideosink sync=1'
+        )
 
-def _fix_callbacks(pipeline, inputs):
-    for i, source in enumerate(inputs):
-        source_name = 'source_bin_{:02d}'.format(i)
-        uridecodebin_element = pipeline.get_child_by_name(source_name)
-        uridecodebin_element.connect('child-added', __decodebin_child_added, args)
+        return mixer_branch
 
+    def _generate_stream_branch(self, inputs, args, index, source, grid):
+        x = index % grid
+        y = index // grid
 
-def _generate_pipeline(inputs, args):
-    grid = math.ceil(math.sqrt(len(inputs)))
+        width = inputs[index].get("width", args.width)
+        height = inputs[index].get("height", args.height)
 
-    pipeline = (
-        'compositor name=mix' +
-        ' ! videoconvert' +
-        ' ! autovideosink sync=1'
-    )
-
-    for i, source in enumerate(inputs):
-        x = i % grid
-        y = i // grid
-
-        width = inputs[i].get("width", args.width)
-        height = inputs[i].get("height", args.height)
-
-        pipeline += (
+        stream_branch = (
             ' uridecodebin name=source_bin_{:02d} uri="{}"'.format(
-                i, inputs[i]["uri"]
+                index, inputs[index]["uri"]
             ) +
             ' ! videoscale add-borders=0 ! videoconvert ! videorate' +
             ' ! capsfilter' +
@@ -164,11 +190,11 @@ def _generate_pipeline(inputs, args):
             ) +
             ' height={}, framerate={}/1"'.format(
                 height,
-                inputs[i].get("fps", args.fps)
+                inputs[index].get("fps", args.fps)
             ) +
             ' ! textoverlay text="{}" font-desc="Ubuntu, {}"'.format(
-                inputs[i].get("text", ""),
-                inputs[i].get("text_size", args.text_size)
+                inputs[index].get("text", ""),
+                inputs[index].get("text_size", args.text_size)
             ) +
             ' ! alpha alpha=1' +
             ' ! videobox border-alpha=0 top={} left={}'.format(
@@ -177,33 +203,63 @@ def _generate_pipeline(inputs, args):
             ' ! mix.'
         )
 
-    return pipeline
+        return stream_branch
 
+    def _generate_pipeline(self, inputs, args):
+        grid = math.ceil(math.sqrt(len(inputs)))
 
-def _run_pipeline(pipeline_string, inputs):
-    Gst.init(None)
-    mainloop = GLib.MainLoop()
-    pipeline = Gst.parse_launch(pipeline_string)
-    _fix_callbacks(pipeline, inputs)
-    pipeline.set_state(Gst.State.NULL)
-    pipeline.set_state(Gst.State.PLAYING)
-    mainloop.run()
+        pipeline = self._generate_mixer_branch()
+
+        for i, source in enumerate(inputs):
+            pipeline += self._generate_stream_branch(
+                inputs, args, i, source, grid
+            )
+
+        return pipeline
+
+    def _run_pipeline(self, pipeline_string, inputs, args):
+        Gst.init(None)
+        mainloop = GLib.MainLoop()
+        
+        pipeline = Gst.parse_launch(pipeline_string)
+        self._fix_callbacks(pipeline, inputs, args)
+        
+        pipeline.set_state(Gst.State.PLAYING)
+        mainloop.run()
+
+    def _copy_sample_config(self, args):
+        sample_config_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'config.yaml'            
+        )
+        print(sample_config_path, args.generate)
+        copyfile(sample_config_path, args.generate)
+
+    def _run_pipeline(self, args):
+        uris = self._get_input_uris(args)
+        if uris is None:
+            raise Exception('Unable to obtain input list.')
+        else:
+            for uri in uris:
+                print("Playing: {}".format(uri))
+
+        pipeline_string = self._generate_pipeline(
+            uris, args
+        )
+
+        print("Pipeline: {}".format(pipeline_string))
+
+        self._run_pipeline(pipeline_string, uris, args)
+
+    def start(self):
+        args = self._get_arguments()
+
+        if args.generate is not None:
+            copy_sample_config(args.generate)
+        else:
+            self._run_pipeline(args)
 
 
 if __name__ == "__main__":
-    args = _get_arguments()
-
-    uris = _get_input_uris(args)
-    if uris is None:
-        raise Exception('Unable to obtain input list.')
-    else:
-        for uri in uris:
-            print("Playing: {}".format(uri))
-
-    pipeline_string = _generate_pipeline(
-        uris, args
-    )
-
-    print("Pipeline: {}".format(pipeline_string))
-
-    _run_pipeline(pipeline_string, uris)
+    tile_player = TilePlayer()
+    tile_player.start()    
