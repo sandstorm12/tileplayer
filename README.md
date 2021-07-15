@@ -9,6 +9,10 @@ This is a personal project under development. Bug reports and feature requests a
 
 ## Installation
 
+### Prerequisites
+1. GStreamer 1.x
+2. Python 3.x
+
 ```bash
 python3 -m pip install git+https://github.com/sandstorm12/tileplayer
 ```
