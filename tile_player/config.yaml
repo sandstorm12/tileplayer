@@ -1,0 +1,46 @@
+streams:
+  -
+    # Optional
+    text: "FPS=5"
+    # Mandatory
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    # Optional
+    fps: 5
+    # Optional
+    text_size: 30
+  -
+    text: "FPS=10"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 10
+    text_size: 30
+  -
+    text: "FPS=15"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 15
+    text_size: 30
+  -
+    text: "FPS=25"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 25
+    text_size: 30
+  -
+    text: "FPS=5"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 5
+    text_size: 30
+  -
+    text: "FPS=10"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 10
+    text_size: 30
+  -
+    text: "FPS=15"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 15
+    text_size: 30
+  -
+    text: "FPS=25"
+    uri: "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    fps: 25
+    text_size: 30
+
