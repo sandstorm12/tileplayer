@@ -20,7 +20,7 @@ Using config file
 # Generate sample config file
 tileplayer -g config.yaml
 # Run tileplayer using the sample configs
-tileplayer -i config.yaml
+tileplayer -c config.yaml
 ```
 
 Directly passing streams:

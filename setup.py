@@ -10,7 +10,7 @@ def read_requirements(path='./requirements.txt'):
 
 setup(
     name="TilePlayer",
-    version="0.5.1",
+    version="0.5.2",
     author="Hamid Mohammadi",
     author_email="sandstormeatwo@gmail.com",
     description="Multi-stream tile player based on gstreamer",
