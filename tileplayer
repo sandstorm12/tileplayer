@@ -175,9 +175,9 @@ class TilePlayer(object):
 
     def _generate_mixer_branch(self):
         mixer_branch = (
-            'compositor name=mix' +
+            ' compositor name=mix' +
             ' ! videoconvert' +
-            ' ! autovideosink sync=1'
+            ' ! xvimagesink sync=1'
         )
 
         return mixer_branch
@@ -229,15 +229,21 @@ class TilePlayer(object):
 
     def _run_pipeline(self, pipeline_string, inputs, args):
         Gst.init(None)
-        mainloop = GLib.MainLoop()
+        mainloop = GLib.MainLoop.new(None, False)
         
         pipeline = Gst.parse_launch(pipeline_string)
         self._fix_callbacks(pipeline, inputs, args)
         
         pipeline.set_state(Gst.State.PLAYING)
-        mainloop.run()
 
-    def _run_pipeline(self, args):
+        bus = pipeline.get_bus()
+        bus.timed_pop_filtered(
+            Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS
+        )
+
+        pipeline.set_state(Gst.State.NULL);
+
+    def _parse_run_pipeline(self, args):
         uris = self._get_input_uris(args)
         if uris is None:
             raise Exception('Unable to obtain input list.')
@@ -261,7 +267,7 @@ class TilePlayer(object):
         if args.generate is not None:
             copy_sample_config(args.generate)
         else:
-            self._run_pipeline(args)
+            self._parse_run_pipeline(args)
 
 
 if __name__ == "__main__":
