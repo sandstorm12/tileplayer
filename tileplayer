@@ -235,6 +235,7 @@ class TilePlayer(object):
         self._fix_callbacks(pipeline, inputs, args)
         
         pipeline.set_state(Gst.State.PLAYING)
+        # mainloop.run()
 
         bus = pipeline.get_bus()
         bus.timed_pop_filtered(
