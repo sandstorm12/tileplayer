@@ -1,4 +1,4 @@
-# tileplayer
+# Tileplayer
 A simpler multi-video file and stream player based on GStreamer
 
 ![](images/sample_image.png)
