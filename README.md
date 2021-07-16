@@ -90,3 +90,11 @@ tileplayer -c config.yaml
 2. FIX: GStreamer critical error. Pipeline is not in NULL state.
 3. Add more interesting grid placement.
 4. FIX: Warning: .gobject/gsignal.c:2736: instance A has no handler with id B
+5. Add output stream feature
+6. Add a waiting image instead of the grid background
+7. Add pause functionality
+8. Caps changin method is not efficient
+9. Use logger
+10. Add fps change on input selection
+11. Add library documentation
+12. Add window size change functionality

@@ -10,7 +10,7 @@ def read_requirements(path='./requirements.txt'):
 
 setup(
     name="TilePlayer",
-    version="0.5.2",
+    version="1.0.0",
     author="Hamid Mohammadi",
     author_email="sandstormeatwo@gmail.com",
     description="Multi-stream tile player based on gstreamer",
@@ -18,7 +18,6 @@ setup(
     scripts=[
         'tileplayer'
     ],
-    package_data={'': ['config.yaml']},
     include_package_data=True,
     install_requires=read_requirements()
 )

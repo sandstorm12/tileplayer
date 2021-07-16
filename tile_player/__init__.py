@@ -1,5 +1,8 @@
 import os
 
-from ._config_helper import copy_sample_config
+from ._tileplayer_core import TilePlayer
 
-__all__ = ["copy_sample_config"]
+
+__all__ = [
+    "TilePlayer"
+]
