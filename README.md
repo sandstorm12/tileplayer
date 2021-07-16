@@ -85,6 +85,9 @@ tileplayer -g config.yaml
 tileplayer -c config.yaml
 ```
 
+## Urgent issues and future work
+1. Fully separate core api from UI script
+
 ## Issues and future work
 1. Add the protocol, latency, and drop-on-latency config per stream
 2. FIX: GStreamer critical error. Pipeline is not in NULL state.
