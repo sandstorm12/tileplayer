@@ -101,3 +101,4 @@ tileplayer -c config.yaml
 10. Add fps change on input selection
 11. Add library documentation
 12. Add window size change functionality
+13. More sample config to resourcs folder
