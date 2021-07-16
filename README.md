@@ -19,7 +19,7 @@ python3 -m pip install git+https://github.com/sandstorm12/tileplayer
 
 ## Usage
 
-Using config file
+Using config file:
 ```bash
 # Generate sample config file
 tileplayer -g config.yaml
@@ -62,22 +62,22 @@ streams:
 
 ## Run using docker image (tested on ubuntu)
 
-Build the docker image
+Build the docker image:
 ```bash
 docker build -f dockerfile_x86 -t tileplayer .
 ```
 
-Give desktop environment access for docker to connect
+Give desktop environment access for docker to connect:
 ```bash
 xhost +
 ```
 
-Run docker container
+Run docker container:
 ```bash
 docker run -it --rm --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix tileplayer bash
 ```
 
-Run tileplayer sample
+Run tileplayer sample:
 ```bash
 # Generate sample config file
 tileplayer -g config.yaml
