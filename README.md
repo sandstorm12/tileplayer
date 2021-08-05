@@ -87,6 +87,7 @@ tileplayer -c config.yaml
 
 ## Urgent issues and future work
 1. Fully separate core api from UI script
+2. Add executable pipeline to output
 
 ## Issues and future work
 1. Add the protocol, latency, and drop-on-latency config per stream
@@ -101,4 +102,5 @@ tileplayer -c config.yaml
 10. Add fps change on input selection
 11. Add library documentation
 12. Add window size change functionality
-13. More sample config to resourcs folder
+13. Add gif instead of current image
+14. More sample config to resourcs folder
