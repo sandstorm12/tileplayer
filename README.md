@@ -87,7 +87,6 @@ tileplayer -c config.yaml
 
 ## Urgent issues and future work
 1. Fully separate core api from UI script
-2. Add executable pipeline to output
 
 ## Issues and future work
 1. Add the protocol, latency, and drop-on-latency config per stream
